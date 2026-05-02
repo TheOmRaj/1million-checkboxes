@@ -1,4 +1,4 @@
-const API_URL = window.ENV_API_URL || "http://localhost:3001";
+const API_URL = window.ENV_API_URL || "https://generous-strength-production-13d9.up.railway.app";
 const TOTAL = 500;
 
 let token = null;
