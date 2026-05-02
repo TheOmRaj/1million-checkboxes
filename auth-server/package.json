@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node src/index.js",
     "build": "node generate-keys.js",
-    "start": "node generate-keys.js && node src/index.js",
+    "start": "node generate-keys.js && node migrate.js && node src/index.js",
     "db:migrate": "node migrate.js"
   },
   "dependencies": {
