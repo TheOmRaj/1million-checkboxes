@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>500 Checkboxes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Auth Screen -->
+  <div id="auth-screen" class="screen">
+    <div class="auth-card">
+      <div class="logo-area">
+        <div class="logo-grid">
+          <span></span><span class="on"></span><span></span><span class="on"></span>
+          <span class="on"></span><span></span><span class="on"></span><span></span>
+          <span></span><span class="on"></span><span></span><span class="on"></span>
+          <span class="on"></span><span></span><span class="on"></span><span></span>
+        </div>
+        <h1>500<br/>Checkboxes</h1>
+        <p class="tagline">One grid. 500 bits. Real-time chaos.</p>
+      </div>
+      <div class="auth-actions">
+        <button id="login-btn" class="btn btn-primary">
+          
+          Sign In / Sign Up
+        </button>
+        <button id="anon-btn" class="btn btn-ghost">Browse anonymously (read-only)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app-screen" class="screen hidden">
+    <header>
+      <div class="header-left">
+        <span class="brand">☑ 500</span>
+        <div class="stats">
+          <span id="checked-count" class="stat-value">—</span>
+          <span class="stat-label">checked</span>
+          <span class="sep">·</span>
+          <span id="users-count" class="stat-value">—</span>
+          <span class="stat-label">online</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div id="user-info" class="user-info hidden">
+          <img id="user-avatar" src="" alt="" class="avatar" />
+          <span id="user-name"></span>
+        </div>
+        <div id="anon-badge" class="anon-badge hidden">👁 Read-only</div>
+        <div id="conn-status" class="conn-dot disconnected" title="Disconnected"></div>
+        <button id="logout-btn" class="btn btn-xs hidden">Sign out</button>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="search-group">
+        <label>Jump to #</label>
+        <input type="number" id="goto-input" min="1" max="500" placeholder="1 – 500" />
+        <button id="goto-btn" class="btn btn-sm">Go</button>
+      </div>
+      <div class="page-group">
+        <button id="prev-page" class="btn btn-sm">◀</button>
+        <span id="page-label" class="page-label">Page 1</span>
+        <button id="next-page" class="btn btn-sm">▶</button>
+      </div>
+      <div class="rate-warn hidden" id="rate-warn">⚡ Slow down!</div>
+    </div>
+
+    <main>
+      <canvas id="checkbox-canvas"></canvas>
+      <div id="hover-tooltip" class="tooltip hidden"></div>
+    </main>
+
+    <footer>
+      <span>Showing <strong id="range-label">—</strong> of 500</span>
+      <span id="toggle-hint">Click to toggle · Scroll to navigate</span>
+    </footer>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

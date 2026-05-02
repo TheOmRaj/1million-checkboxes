@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — Checkboxes</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Courier New', monospace;
+      background: #0a0a0f;
+      color: #e0e0f0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: #13131a;
+      border: 1px solid #2a2a3a;
+      border-radius: 12px;
+      padding: 40px;
+      width: 360px;
+    }
+    h1 { font-size: 20px; margin-bottom: 6px; color: #00ff88; }
+    .sub { font-size: 12px; color: #666680; margin-bottom: 28px; }
+    .tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 1px solid #2a2a3a; }
+    .tab {
+      flex: 1; padding: 8px; text-align: center; cursor: pointer;
+      font-size: 13px; color: #666680; border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab.active { color: #00ff88; border-bottom-color: #00ff88; }
+    .field { margin-bottom: 16px; }
+    label { display: block; font-size: 11px; color: #666680; margin-bottom: 6px; }
+    input {
+      width: 100%; padding: 10px 12px;
+      background: #0a0a0f; border: 1px solid #2a2a3a;
+      border-radius: 6px; color: #e0e0f0;
+      font-family: 'Courier New', monospace; font-size: 13px;
+    }
+    input:focus { outline: none; border-color: #00ff88; }
+    button {
+      width: 100%; padding: 11px;
+      background: #00ff88; color: #000;
+      border: none; border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px; font-weight: 700;
+      cursor: pointer; margin-top: 4px;
+    }
+    button:hover { background: #00ffaa; }
+    .error { color: #ff4455; font-size: 12px; margin-top: 12px; display: none; }
+    .success { color: #00ff88; font-size: 12px; margin-top: 12px; display: none; }
+    .form { display: none; }
+    .form.active { display: block; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>☑ Checkboxes</h1>
+    <p class="sub">Sign in to toggle checkboxes in real time</p>
+
+    <div class="tabs">
+      <div class="tab active" onclick="showTab('signin')">Sign In</div>
+      <div class="tab" onclick="showTab('signup')">Sign Up</div>
+    </div>
+
+    <div id="signin-form" class="form active">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="signin-email" placeholder="you@example.com" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="signin-password" placeholder="••••••••" />
+      </div>
+      <button onclick="signIn()">Sign In</button>
+      <div class="error" id="signin-error"></div>
+    </div>
+
+    <div id="signup-form" class="form">
+      <div class="field">
+        <label>First Name</label>
+        <input type="text" id="signup-firstname" placeholder="Om" />
+      </div>
+      <div class="field">
+        <label>Last Name (optional)</label>
+        <input type="text" id="signup-lastname" placeholder="Raj" />
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="signup-email" placeholder="you@example.com" />
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="signup-password" placeholder="••••••••" />
+      </div>
+      <button onclick="signUp()">Create Account</button>
+      <div class="error" id="signup-error"></div>
+      <div class="success" id="signup-success"></div>
+    </div>
+  </div>
+
+  <script>
+    function showTab(tab) {
+      document.querySelectorAll('.tab').forEach((t, i) => {
+        t.classList.toggle('active', (i === 0 && tab === 'signin') || (i === 1 && tab === 'signup'));
+      });
+      document.getElementById('signin-form').classList.toggle('active', tab === 'signin');
+      document.getElementById('signup-form').classList.toggle('active', tab === 'signup');
+    }
+
+    function getRedirectUri() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('redirect_uri') || 'http://localhost:3001/auth/callback';
+    }
+
+    async function signIn() {
+      const email = document.getElementById('signin-email').value;
+      const password = document.getElementById('signin-password').value;
+      const errEl = document.getElementById('signin-error');
+      errEl.style.display = 'none';
+
+      const res = await fetch('/o/authenticate/sign-in', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        errEl.textContent = data.message;
+        errEl.style.display = 'block';
+        return;
+      }
+
+      const redirectUri = getRedirectUri();
+      window.location.href = `${redirectUri}?token=${data.token}`;
+    }
+
+    async function signUp() {
+      const firstName = document.getElementById('signup-firstname').value;
+      const lastName = document.getElementById('signup-lastname').value;
+      const email = document.getElementById('signup-email').value;
+      const password = document.getElementById('signup-password').value;
+      const errEl = document.getElementById('signup-error');
+      const sucEl = document.getElementById('signup-success');
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      const res = await fetch('/o/authenticate/sign-up', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        errEl.textContent = data.message;
+        errEl.style.display = 'block';
+        return;
+      }
+
+      sucEl.textContent = 'Account created! You can now sign in.';
+      sucEl.style.display = 'block';
+      setTimeout(() => showTab('signin'), 1500);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const activeForm = document.querySelector('.form.active').id;
+        if (activeForm === 'signin-form') signIn();
+        else signUp();
+      }
+    });
+  </script>
+</body>
+</html>

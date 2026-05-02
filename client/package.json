@@ -1,0 +1,10 @@
+{
+  "name": "1million-checkboxes-client",
+  "version": "1.0.0",
+  "description": "1 Million Checkboxes Frontend",
+  "scripts": {
+    "dev": "npx serve . -p 3000",
+    "start": "npx serve . -p 3000"
+  },
+  "dependencies": {}
+}
