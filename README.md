@@ -2,6 +2,11 @@
 
 A real-time collaborative web app where up to millions of users can toggle a shared grid of 500 checkboxes — changes are reflected instantly across all connected clients.
 
+## Live Demo
+- Frontend: https://checkboxes-app-omraj.netlify.app
+- Checkboxes API: https://generous-strength-production-13d9.up.railway.app
+- Auth Server: https://1million-checkboxes-production.up.railway.app
+
 ---
 
 ## 🚀 Tech Stack
